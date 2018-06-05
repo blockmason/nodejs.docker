@@ -1,4 +1,7 @@
 .PHONY: build
 
+IMAGE_NAME=blockmason/nodejs
+IMAGE_VERSION=$(shell perl -n -e'/NODEJS_VERSION="([^"]+)"/ && print "$$1";' < Dockerfile)
+
 build:
-	docker build -t blockmason/nodejs:10.3.0 .
+	docker build -t $(IMAGE_NAME):$(IMAGE_VERSION) .
