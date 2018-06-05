@@ -1,0 +1,64 @@
+FROM debian:stretch
+
+ENV NODEJS_VERSION="9.11.1" \
+    NPM_VERSION="6.0.0" \
+    YARN_VERSION="1.6.0"
+
+RUN set -e;\
+  apt-get update;\
+  apt-get install gnupg wget xz-utils -y;\
+  gpg --keyserver pgp.mit.edu --recv-keys \
+    94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
+    FD3A5288F042B6850C66B31F09FE44734EB7990E \
+    71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
+    DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
+    C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
+    B9AE9905FFD7803F25714661B63B535A4C206CA9 \
+    56730D5401028683275BD23C23EFEFE93C4CFFFE \
+    77984A986EBC2AA786BC0F66B01FBB92821C587A \
+  ;\
+  mkdir -p /usr/share/nodejs;\
+  cd /usr/share/nodejs;\
+  wget -q "https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-linux-x64.tar.xz";\
+  wget -q "https://nodejs.org/dist/v${NODEJS_VERSION}/SHASUMS256.txt.asc";\
+  gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc;\
+  grep " node-v${NODEJS_VERSION}-linux-x64.tar.xz\$" SHASUMS256.txt | sha256sum -c - | grep -q ': OK$';\
+  tar xJf "node-v${NODEJS_VERSION}-linux-x64.tar.xz" --strip-components=1 --no-same-owner;\
+  rm -f \
+    "SHASUMS256.txt.asc" \
+    "SHASUMS256.txt" \
+    "node-v${NODEJS_VERSION}-linux-x64.tar.xz"\
+  ;\
+  chmod -fR go+rX,go-w .;\
+  ln -vs "/usr/share/nodejs/bin/node" "/bin/node";\
+  ln -vs "/usr/share/nodejs/bin/npm" "/bin/npm";\
+  /bin/npm install --global "npm@${NPM_VERSION}";\
+  mkdir -p /usr/share/yarn;\
+  cd /usr/share/yarn;\
+  wget -q "https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz";\
+  wget -q "https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz.asc";\
+  wget -q -O - "https://dl.yarnpkg.com/debian/pubkey.gpg" | gpg --import;\
+  gpg --verify "yarn-v${YARN_VERSION}.tar.gz.asc";\
+  tar xzf "yarn-v${YARN_VERSION}.tar.gz" --strip-components=1 --no-same-owner;\
+  rm -f \
+    "yarn-v${YARN_VERSION}.tar.gz" \
+    "yarn-v${YARN_VERSION}.tar.gz.asc" \
+  ;\
+  chmod -fR go+rX,go-w .;\
+  ln -vs "/usr/share/yarn/bin/yarn" "/bin/yarn";\
+  apt-get remove gnupg wget xz-utils -y;\
+  apt-get autoremove -y;\
+  rm -vfR /var/lib/apt/lists/*;
+
+RUN set -e;\
+  apt-get update;\
+  apt-get install build-essential ca-certificates git gzip python ssh -y;\
+  apt-get autoremove -y;\
+  rm -vfR /var/lib/apt/lists/*;
+
+RUN set -e;\
+  addgroup --system --gid 1000 docker;\
+  adduser --home /docker --gecos '' --shell /bin/bash --gid 1000 --system --disabled-login --uid 1000 docker;
+
+USER docker
+WORKDIR /docker
