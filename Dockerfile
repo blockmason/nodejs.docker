@@ -1,7 +1,7 @@
 FROM debian:stretch
 
-ENV NODEJS_VERSION="10.4.1" \
-    NPM_VERSION="6.1.0" \
+ENV NODEJS_VERSION="8.10.0" \
+    NPM_VERSION="5.6.0" \
     YARN_VERSION="1.7.0"
 
 COPY signingkey.gpg /tmp/signingkey.gpg
