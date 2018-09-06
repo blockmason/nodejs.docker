@@ -56,5 +56,10 @@ RUN set -e;\
   addgroup --system --gid 1000 docker;\
   adduser --home /docker --gecos '' --shell /bin/bash --gid 1000 --system --disabled-login --uid 1000 docker;
 
+RUN set -e;\
+  apt-get update;\
+  apt-get install zip -y;\
+  apt-get autoremove -y;
+
 USER docker
 WORKDIR /docker
