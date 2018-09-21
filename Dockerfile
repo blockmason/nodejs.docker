@@ -56,5 +56,16 @@ RUN set -e;\
   addgroup --system --gid 1000 docker;\
   adduser --home /docker --gecos '' --shell /bin/bash --gid 1000 --system --disabled-login --uid 1000 docker;
 
+RUN set -e;\
+  apt-get update;\
+  apt-get install wget unzip -y;\
+  wget -q 'https://s3.amazonaws.com/aws-cli/awscli-bundle.zip';\
+  unzip awscli-bundle.zip;\
+  awscli-bundle/install -i /opt/aws-cli -b /usr/bin/aws;\
+  rm -fR awscli-bundle.zip awscli-bundle;\
+  apt-get remove wget unzip -y;\
+  apt-get autoremove -y;
+
+
 USER docker
 WORKDIR /docker
