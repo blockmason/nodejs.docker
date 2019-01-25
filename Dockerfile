@@ -1,7 +1,7 @@
 FROM debian:stretch
 
-ENV NODEJS_VERSION="11.6.0" \
-    NPM_VERSION="6.5.0" \
+ENV NODEJS_VERSION="11.7.0" \
+    NPM_VERSION="6.6.0" \
     YARN_VERSION="1.13.0"
 
 RUN set -e;\
@@ -34,7 +34,7 @@ RUN set -e;\
     DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
     A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
   ; do\
-    gpg --keyserver hkps://hkps.pool.sks-keyservers.net --batch --receive-keys "${KEY_ID}" || echo 'Ignoring import of failed key.';\
+    gpg --keyserver hkps://192.146.137.98 --batch --receive-keys "${KEY_ID}";\
   done;
 
 RUN set -e;\
