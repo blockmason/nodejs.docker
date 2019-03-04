@@ -1,6 +1,6 @@
 FROM debian:stretch
 
-ENV NODEJS_VERSION="11.10.0" \
+ENV NODEJS_VERSION="11.10.1" \
     NPM_VERSION="6.8.0" \
     YARN_VERSION="1.13.0"
 
