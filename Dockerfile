@@ -1,8 +1,8 @@
 FROM debian:stretch
 
-ENV NODEJS_VERSION="11.10.1" \
-    NPM_VERSION="6.8.0" \
-    YARN_VERSION="1.13.0"
+ENV NODEJS_VERSION="11.13.0" \
+    NPM_VERSION="6.9.0" \
+    YARN_VERSION="1.15.2"
 
 RUN set -e;\
   apt-get update;\
